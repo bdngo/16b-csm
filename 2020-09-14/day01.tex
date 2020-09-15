@@ -69,7 +69,8 @@
 
     \begin{itemize}
         \item Name
-        \item Major
+        \item Pronouns
+        \item Year/Major
         \item How you spent quarantine
         \item Most mundane/interesting fact about yourself
     \end{itemize}
@@ -113,23 +114,93 @@
 \section{Differential Equations}
 
 \begin{frame}
-    \frametitle{The Derivative}
-
-    \begin{equation}
-        \diff{x} f(x) = \lim_{h \to 0} \frac{f(x + h) - f(x)}{h}
-    \end{equation}
-    \begin{itemize}
-        \item describes instantaneous rate of change
-    \end{itemize}
-\end{frame}
-
-\begin{frame}
     \frametitle{Differential Equations}
 
+    Concept check! \pause
+
+    \begin{equation}
+        \diff{t} x(t) = f(x, t)
+    \end{equation}
     \begin{itemize}
+        \item Focusing on first-order ODEs
+        \item Relates the derivative in other terms
         \item \href{https://youtu.be/p_di4Zn4wz4?list=PLZHQObOWTQDNPOjrT6KVlfJuKtYTftqH6}{3Blue1Brown video}
     \end{itemize}
 
+\end{frame}
+
+\begin{frame}
+    \frametitle{Exponential Differential Equation}
+    \framesubtitle{Homogeneous}
+
+    \begin{equation}
+        \diff{t} x(t) = \lambda x(t) \implies x(t) = x_0 e^{\lambda t}
+    \end{equation}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Exponential Differential Equation}
+    \framesubtitle{Non-Homogeneous}
+
+    \begin{equation}
+        \diff{t} x(t) = \alpha x(t) + \beta
+    \end{equation}
+\end{frame}
+
+\section{RC Circuits}
+
+\begin{frame}
+    \frametitle{Undamped Response}
+
+    \begin{center}
+        \begin{circuitikz}\draw
+            (0, 2) to[C=\(C\), v=\(V_C\), invert] (0, 0)
+            (0, 2) to[short, i=\(I_C\)] (2, 2) to[R=\(R\)] (2, 0) to[short] (0, 0)
+        ;\end{circuitikz}
+    \end{center} \pause
+    
+    \begin{align}
+        C \diff{t} V_C &= -\frac{V_C}{R} \\
+        \diff{t} V_C &= \underbrace{-\frac{1}{RC}}_{\lambda} V_C \\
+        \Rightarrow V_C(t) &= V_0 e^{-\frac{1}{RC} t} = V_0 e^{-\frac{1}{\tau} t}
+    \end{align}
+
+\end{frame}
+
+\section{Transistors}
+
+\begin{frame}
+    \frametitle{NMOS \& PMOS}
+
+    \begin{columns}
+        \column{0.5\textwidth}
+        \centering
+        \underline{NMOS} \\
+        \begin{circuitikz}\draw
+            (0, 0) node[nmos](n1){}
+            (-2, 0) to[short] (n1.G)
+            (0, -2) to[short] (n1.S)
+            (0, 2) to[short] (n1.D)
+            (-2, 0) node[circ]{\(G\)} to[open, v=\(V_{gs}\), european] (0, -2) node[circ]{\(S\)}
+            (0, 2) node[circ]{\(D\)} to[open] (0.5, 2)
+            (0, -2) to[open] (0.5, -2)
+            (0.5, 2) to[open, v=\(V_{ds}\)] (0.5, -2)
+        ;\end{circuitikz}
+
+        \column{0.5\textwidth}
+        \centering
+        \underline{PMOS} \\
+        \begin{circuitikz}\draw
+            (0, 0) node[pmos](p1){}
+            (-2, 0) to[short] (p1.G)
+            (0, 2) to[short] (p1.S)
+            (0, -2) to[short] (p1.D)
+            (-2, 0) node[circ]{\(G\)} to[open, v^=\(V_{gs}\), european] (0, 2) node[circ]{\(S\)}
+            (0, -2) node[circ]{\(D\)} to[open] (0.5, -2)
+            (0, 2) to[open] (0.5, 2)
+            (0.5, -2) to[open, v=\(V_{ds}\)] (0.5, 2)
+        ;\end{circuitikz}
+    \end{columns}
 \end{frame}
 
 \end{document}
