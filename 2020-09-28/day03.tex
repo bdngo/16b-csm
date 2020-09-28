@@ -1,0 +1,174 @@
+\documentclass[aspectratio=169]{beamer}
+\usepackage{amsmath, amssymb, amsfonts, amsthm}
+\usepackage{cancel}
+\usepackage[output-complex-root=j]{siunitx}
+\usepackage[american, nooldvoltagedirection]{circuitikz}
+\usepackage{bm}
+\usepackage{listings}
+\usepackage{graphicx}
+\usepackage{hyperref}
+
+\usetheme{Berkeley}
+\usefonttheme[onlymath]{serif}
+\AtBeginSection[]{
+    \begin{frame}
+    \vfill
+    \centering
+    \begin{beamercolorbox}[sep=8pt,center,shadow=false,rounded=false]{title}
+        \usebeamerfont{title}\insertsectionhead\par
+    \end{beamercolorbox}
+    \vfill
+    \end{frame}
+}
+
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\R}{\mathbb{R}}
+\renewcommand{\C}{\mathbb{C}}
+
+\title{EECS 16B CSM}
+\author{Bryan Ngo}
+\date{2020-09-27}
+\institute{Computer Science Mentors}
+
+\begin{document}
+
+\begin{frame}
+    \maketitle
+\end{frame}
+
+\section{Complex Numbers}
+
+\begin{frame}
+    \frametitle{Definition}
+
+    \begin{equation}
+        z = \underbrace{a + bj}_{\text{rectangular}} = \underbrace{r e^{j \theta}}_{\text{polar}}
+    \end{equation}
+    \begin{itemize}
+        \item \(a, b, r, \theta \in \R\)
+        \item \(j^2 = -1\)
+        \item we use \(j\) in EE
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Coordinate Transforms}
+
+    \begin{align}
+        r^2 &= a^2 + b^2 \\
+        \tan(\theta) &= \frac{b}{a} \\
+        a &= r \cos(\theta) \\
+        b &= r \sin(\theta)
+    \end{align}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Euler's Formula}
+
+    \begin{equation}
+        e^{j \theta} = \cos(\theta) + j \sin(\theta)
+    \end{equation}
+    \begin{itemize}
+        \item \href{https://youtu.be/v0YEaeIClKY}{relevant 3Blue1Brown}
+        \item \(e^{j \pi} + 1 = 0\) is a special case
+    \end{itemize}
+\end{frame}
+
+\section{Phasors}
+
+\begin{frame}{Phasors}
+    \begin{itemize}
+        \item Encodes information about any sinusoid: voltage, current, etc.
+        \item If frequency is constant, then uniquely identifies
+    \end{itemize}
+    \begin{equation}
+        A \cos(\omega t + \phi) = \Re\{A e^{j (\omega t + \phi)}\} = \Re\{\underbrace{A e^{j \phi}}_{\text{phasor}} e^{j \omega t}\}
+    \end{equation}
+\end{frame}
+
+\begin{frame}{Properties}
+    Given \(x_1(t) = \Re\{A_1 e^{j \omega t}\}, x_2(t) = \Re\{A_2 e^{j \omega t}\}\) with phasors \(A_{1, 2}\),
+    \begin{itemize}
+        \item Uniqueness: \(x_1(t) = x_2(t) \implies A_1 = A_2\)
+        \item Linearity: \(a_1 x_1(t) + a_2 x_2(t) \implies a_1 A_1 + a_2 A_2\) for \(a_{1, 2} \in \mathbb{R}\)
+        \item Differentiation: \(x(t) \Leftrightarrow A \implies \frac{d}{dt} x(t) = \frac{d}{dt} \Re\{A e^{j \omega t}\} = \Re\{j \omega A e^{j \omega t}\} \Leftrightarrow j \omega A\)
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Circuits \& Phasors}{KVL}
+    \begin{center}
+        \begin{circuitikz}\draw
+            (0, 0) to[generic, v^=~] (0, 2) to[generic, v^=~] (2, 2) to[generic, v^=~] (2, 0) to[generic, v^=~] (0, 0);
+            \draw[thin, <-, ] (1,1) ++(-60:0.5) arc (-60:170:0.5);
+        \end{circuitikz}
+    \end{center}
+    \begin{equation}
+        \sum_i \overline{V}_i = 0
+    \end{equation}
+\end{frame}
+
+\begin{frame}{Circuits \& Phasors (cont.)}{KCL}
+    \begin{center}
+        \begin{circuitikz}\draw
+            (-2, 2) to[generic, i=~] (0, 2) to[generic, i>^=~] (2, 2)
+            (0, 0) to[generic, i=~] (0, 2)
+        ;\end{circuitikz}
+    \end{center}
+    \begin{equation}
+        \sum \overline{I}_{out} = \sum \overline{I}_{in}
+    \end{equation}
+\end{frame}
+
+\begin{frame}{Circuits \& Phasors (cont.)}{Ohm's Law}
+    \begin{center}
+        \begin{circuitikz}\draw
+            (0, 0) to[generic=\(Z\), v=\(V\), i>^=\(I\)] (4, 0)
+        ;\end{circuitikz}
+    \end{center}
+    \begin{equation}
+        \overline{V} = \overline{I} \underbrace{Z}_{\text{impedance}}
+    \end{equation}
+\end{frame}
+
+\begin{frame}{Passive Elements \& Phasors}
+    \scalebox{0.75}{
+        \begin{circuitikz}\draw
+            (0, 2) to[R=\(R\), v=\(V\), i>^=\(I\)] (0, 0)
+        ;\end{circuitikz}
+    }
+    \begin{equation}
+        \overline{V} = \overline{I} R
+    \end{equation}
+    \scalebox{0.75}{
+        \begin{circuitikz}[scale=0.8]\draw
+            (0, 2) to[L=\(L\), v=\(V\), i>^=\(I\)] (0, 0)
+        ;\end{circuitikz}
+    }
+    \begin{equation}
+        \overline{V} = L \frac{d}{dt} \overline{I} = j \omega L \overline{I}
+    \end{equation}
+    \scalebox{0.75}{
+        \begin{circuitikz}[scale=0.8]\draw
+            (0, 2) to[C=\(C\), v=\(V\), i>^=\(I\)] (0, 0)
+        ;\end{circuitikz}
+    }
+    \begin{equation}
+        \overline{I} = C \frac{d}{dt} \overline{V} = j \omega C \overline{V} \implies \overline{V} = \frac{1}{j \omega C} \overline{I}
+    \end{equation}
+\end{frame}
+
+\begin{frame}{Demo}
+    \Huge\url{http://tinyurl.com/y5qfnqtk}
+\end{frame}
+
+\begin{frame}{Low Pass Filter}
+    \begin{align}
+        \overline{V}_{out} &= \frac{\frac{1}{j \omega C}}{R + \frac{1}{j \omega C}} \overline{V}_{in} \\
+        \overline{V}_{out} &= \frac{1}{1 + j \omega RC} \overline{V}_{in} \\
+        \Rightarrow H(j \omega) &= \frac{\overline{V}_{out}}{\overline{V}_{in}} = \frac{1}{1 + j \omega RC}
+    \end{align}
+\end{frame}
+
+\end{document}
