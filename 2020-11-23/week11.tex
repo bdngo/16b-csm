@@ -1,0 +1,60 @@
+\documentclass[aspectratio=169]{beamer}
+\usepackage{amsmath, amssymb, amsfonts, amsthm}
+\usepackage{cancel}
+\usepackage[output-complex-root=j]{siunitx}
+\usepackage[american, nooldvoltagedirection]{circuitikz}
+\usepackage{bm}
+\usepackage{listings}
+\usepackage{graphicx}
+\usepackage{hyperref}
+
+\usetheme{Berkeley}
+\usefonttheme[onlymath]{serif}
+\AtBeginSection[]{
+    \begin{frame}
+    \vfill
+    \centering
+    \begin{beamercolorbox}[sep=8pt,center,shadow=false,rounded=false]{title}
+    \usebeamerfont{title}\insertsectionhead\par
+    \end{beamercolorbox}
+    \vfill
+    \end{frame}
+}
+
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\R}{\mathbb{R}}
+\renewcommand{\C}{\mathbb{C}}
+
+\title{EECS 16B CSM}
+\author{Bryan Ngo}
+\date{2020-11-22}
+\institute{UC Berkeley}
+
+\begin{document}
+
+\begin{frame}
+    \maketitle
+\end{frame}
+
+\begin{frame}
+    \frametitle{Linear Time Invariant Systems}
+
+    \begin{itemize}
+        \item Linearity: \(F\{a x_1[t] + b x_2[t]\} = a F\{x_1[t]\} + b F\{x_2[t]\}\)
+        \item Time Invariance: \(y[t - t_0] = F\{x[t - t_0]\}\)
+        \item Causality: \(y[t] = F\{x[t], x[t - t_0]\}\)
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Moore-Penrose Pseudoinverse}
+
+    \begin{itemize}
+        \item application of SVD
+        \item finds inverses of non-invertible matrices
+    \end{itemize}
+\end{frame}
+
+\end{document}
