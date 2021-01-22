@@ -1,0 +1,53 @@
+\documentclass[aspectratio=169]{beamer}
+\usepackage{amsmath, amssymb, amsfonts}
+\usepackage[american]{circuitikz}
+\usepackage{hyperref}
+
+\usetheme{Berkeley}
+
+\usefonttheme[onlymath]{serif}
+
+\title{EECS 16A CSM Presentation}
+\author{Bryan Ngo}
+\date{2020-08-24}
+
+\begin{document}
+
+\begin{frame}
+    \maketitle
+\end{frame}
+
+\begin{frame}{The Voltage Divider}
+    \begin{center}
+    \begin{circuitikz}\draw
+        (0, 0) to[V=\(V_{in}\), invert] (0, 4) to[short] (2, 4) to[R=\(R_1\)] (2, 2) to[R=\(R_2\)] (2, 0) to[short] (0, 0)
+        (2, 2) to[short] (4, 2) to[open, v=\(V_{out}\), o-o] (4, 0) to[short] (2, 0)
+    ;\end{circuitikz}
+    \end{center}
+\end{frame}
+
+\begin{frame}{Derivation}{Labeling}
+    \begin{center}
+    \begin{circuitikz}\draw
+        (0, 0) node[ground]{} to[V=\(V_{in}\), invert] (0, 4) node[circ]{\(u_1\)} to[short] (2, 4) to[R=\(R_1\), i=\(I_1\), v=~] (2, 2) node[circ]{\(u_2\)} to[R=\(R_2\), i=\(I_2\), v=~] (2, 0) to[short] (0, 0)
+        (2, 2) to[short] (4, 2) to[open, v=\(V_{out}\), o-o] (4, 0) to[short] (2, 0)
+    ;\end{circuitikz}
+    \end{center}
+\end{frame}
+
+\begin{frame}{Derivation (cont.)}{Node Voltage Analysis}
+    \begin{align}
+        u_1 &= V_{in} \\
+        u_2 &= V_{out} \\
+        \frac{u_2}{R_2} - \frac{u_1 - u_2}{R_1} &= 0 \\
+        \Rightarrow u_1 \left(-\frac{1}{R_1}\right) + u_2 \left(\frac{1}{R_1} + \frac{1}{R_2}\right) &= 0 \\
+        V_{out} \left(\frac{R_1 + R_2}{R_1 R_2}\right) &= V_{in} \left(\frac{1}{R_1}\right) \\
+        V_{out} &= \frac{R_2}{R_1 + R_2} V_{in}
+    \end{align}
+\end{frame}
+
+\begin{frame}{Demo}
+    \url{http://tinyurl.com/y2rqf523}
+\end{frame}
+
+\end{document}
