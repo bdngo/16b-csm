@@ -1,0 +1,206 @@
+\documentclass[aspectratio=169]{beamer}
+\usepackage{amsmath, amssymb, amsfonts, amsthm}
+\usepackage{cancel}
+\usepackage[output-complex-root=j]{siunitx}
+\usepackage[american, nooldvoltagedirection]{circuitikz}
+\usepackage{bm}
+\usepackage{listings}
+\usepackage{graphicx}
+\usepackage{hyperref}
+
+\usetheme{Berkeley}
+\usefonttheme[onlymath]{serif}
+\AtBeginSection[]{
+    \begin{frame}
+    \vfill
+    \centering
+    \begin{beamercolorbox}[sep=8pt,center,shadow=false,rounded=false]{title}
+        \usebeamerfont{title}\insertsectionhead\par
+    \end{beamercolorbox}
+    \vfill
+    \end{frame}
+}
+
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\R}{\mathbb{R}}
+\renewcommand{\C}{\mathbb{C}}
+\newcommand{\unit}[1]{\bm{\hat{#1}}}
+\newcommand{\iprod}[2]{\left\langle #1, #2 \right\rangle}
+\newcommand{\tpose}[1]{\left[#1\right]^{\! \top} \!\!}
+\newcommand{\diff}[1]{\frac{d}{d #1}}
+
+\title{EECS 16B CSM Drop-In Session}
+\author{Bryan Ngo}
+\date{2021-02-01}
+\institute{Computer Science Mentors}
+
+\begin{document}
+
+\begin{frame}
+    \maketitle
+\end{frame}
+
+\begin{frame}
+    \frametitle{Who am I?}
+
+    \begin{columns}
+        \column[]{0.5\textwidth}
+        \includegraphics[width=0.8\textheight]{bryan_ngo.png}
+
+        \column[]{0.5\textwidth}
+        \begin{itemize}
+            \item 2nd year majoring in EECS
+            \item took EECS 16B Spring 2020
+            \item How I spent break
+            \begin{itemize}
+                \item lots of vidya (Civ VI, Valorant, etc.)
+                \item built mechanical keyboard
+            \end{itemize}
+        \end{itemize}
+    \end{columns}
+\end{frame}
+
+% \begin{frame}
+%     \frametitle{Who are you?}
+
+%     \begin{itemize}
+%         \item Name
+%         \item Pronouns
+%         \item Year/Major
+%         \item How you spent quarantine
+%         \item Most mundane/interesting fact about yourself
+%     \end{itemize}
+% \end{frame}
+
+% \begin{frame}
+%     \frametitle{Logistics}
+
+%     \begin{itemize}
+%         \item Join \href{http://piazza.com/berkeley/fall2020/csm16b}{Piazza}
+%         \item unexcused absences in first 3 weeks \(\to\) \textbf{auto-dropped \& NP}
+%         \item excused absences
+%         \begin{itemize}
+%             \item email \href{mailto:bryanngo@berkeley.edu}{bryanngo@berkeley.edu} \& cc \href{mailto:mentors@berkeley.edu}{mentors@berkeley.edu} with subject line \texttt{[Request for Absence] <course>}
+%         \end{itemize}
+%     \end{itemize}
+% \end{frame}
+
+% \begin{frame}
+%     \frametitle{Expectations}
+%     \framesubtitle{Me to You}
+
+%     \begin{itemize}
+%         \item Be skeptical
+%         \item Constant feedback
+%         \item Become passionate about 16B
+%     \end{itemize}
+% \end{frame}
+
+% \begin{frame}
+%     \frametitle{Expectations}
+%     \framesubtitle{You to Me}
+
+%     \begin{itemize}
+%         \item Lecture:worksheet ratio?
+%         \item Get a webcam?
+%         \item Stop typing so loud?
+%     \end{itemize}
+% \end{frame}
+
+\section{Differential Equations}
+
+\begin{frame}
+    \frametitle{Differential Equations}
+
+    Concept check! \pause
+
+    \begin{equation}
+        \diff{t} x(t) = f(x, t)
+    \end{equation}
+    \begin{itemize}
+        \item Focusing on first-order ODEs
+        \item Relates the derivative in other terms
+        \item \href{https://youtu.be/p_di4Zn4wz4?list=PLZHQObOWTQDNPOjrT6KVlfJuKtYTftqH6}{3Blue1Brown video}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Exponential Differential Equation}
+    \framesubtitle{Homogeneous}
+
+    \begin{equation}
+        \diff{t} x(t) = \lambda x(t) \implies x(t) = x_0 e^{\lambda t}
+    \end{equation}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Exponential Differential Equation}
+    \framesubtitle{Non-Homogeneous}
+
+    \begin{align}
+        \diff{t} x(t) &= \alpha x(t) + \beta \\
+        \diff{t} x(t) &= \alpha \left(x(t) + \frac{\beta}{\alpha}\right) \\
+        \int \frac{1}{x(t) + \frac{\beta}{\alpha}} \, dx(t) &= \int \alpha \, dt \\
+        \ln\left|x(t) + \frac{\beta}{\alpha}\right| &= \alpha t + C \\
+        \Rightarrow x(t) &= -\frac{\beta}{\alpha} + C e^{\alpha t}
+    \end{align}
+\end{frame}
+
+\section{RC Circuits}
+
+\begin{frame}
+    \frametitle{Undamped Response}
+
+    \begin{center}
+        \begin{circuitikz}\draw
+            (0, 2) to[C=\(C\), v=\(V_C\), invert] (0, 0)
+            (0, 2) to[short, i=\(I_C\)] (2, 2) to[R=\(R\)] (2, 0) to[short] (0, 0)
+        ;\end{circuitikz}
+    \end{center} \pause
+    
+    \begin{align}
+        C \diff{t} V_C &= -\frac{V_C}{R} \\
+        \diff{t} V_C &= \underbrace{-\frac{1}{RC}}_{\lambda} V_C \\
+        \Rightarrow V_C(t) &= V_0 e^{-\frac{1}{RC} t} = V_0 e^{-\frac{1}{\tau} t}
+    \end{align}
+\end{frame}
+
+\section{Transistors}
+
+\begin{frame}
+    \frametitle{NMOS \& PMOS}
+
+    \begin{columns}
+        \column{0.5\textwidth}
+        \centering
+        \underline{NMOS} \\
+        \begin{circuitikz}\draw
+            (0, 0) node[nmos](n1){}
+            (-2, 0) to[short] (n1.G)
+            (0, -2) to[short] (n1.S)
+            (0, 2) to[short] (n1.D)
+            (-2, 0) node[circ]{\(G\)} to[open, v=\(V_{gs}\), european] (0, -2) node[circ]{\(S\)}
+            (0, 2) node[circ]{\(D\)} to[open] (0.5, 2)
+            (0, -2) to[open] (0.5, -2)
+            (0.5, 2) to[open, v=\(V_{ds}\)] (0.5, -2)
+        ;\end{circuitikz}
+
+        \column{0.5\textwidth}
+        \centering
+        \underline{PMOS} \\
+        \begin{circuitikz}\draw
+            (0, 0) node[pmos](p1){}
+            (-2, 0) to[short] (p1.G)
+            (0, 2) to[short] (p1.S)
+            (0, -2) to[short] (p1.D)
+            (-2, 0) node[circ]{\(G\)} to[open, v^=\(V_{gs}\), european] (0, 2) node[circ]{\(S\)}
+            (0, -2) node[circ]{\(D\)} to[open] (0.5, -2)
+            (0, 2) to[open] (0.5, 2)
+            (0.5, -2) to[open, v=\(V_{ds}\)] (0.5, 2)
+        ;\end{circuitikz}
+    \end{columns}
+\end{frame}
+
+\end{document}
