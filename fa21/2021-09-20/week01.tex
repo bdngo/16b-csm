@@ -1,0 +1,161 @@
+\documentclass[aspectratio=169]{beamer}
+\usepackage{lmodern}
+\usepackage{amsmath, amssymb, amsfonts, amsthm}
+\usepackage{cancel}
+\usepackage[output-complex-root=j]{siunitx}
+\usepackage[american, nooldvoltagedirection]{circuitikz}
+\usepackage{bm}
+\usepackage{listings}
+\usepackage{graphicx}
+\usepackage{hyperref}
+
+\usetheme{Berkeley}
+\usefonttheme[onlymath]{serif}
+\AtBeginSection[]{
+    \begin{frame}
+    \vfill
+    \centering
+    \begin{beamercolorbox}[sep=8pt,center,shadow=false,rounded=false]{title}
+        \usebeamerfont{title}\insertsectionhead\par
+    \end{beamercolorbox}
+    \vfill
+    \end{frame}
+}
+
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\unit}[1]{\bm{\hat{#1}}}
+\newcommand{\iprod}[2]{\left\langle #1, #2 \right\rangle}
+\newcommand{\tpose}[1]{\left[#1\right]^{\! \top} \!\!}
+\newcommand{\diff}[1]{\frac{d}{d #1}}
+
+\title{EECS 16B CSM}
+\author{Bryan Ngo}
+\date{2021-09-20}
+\institute{Computer Science Mentors}
+
+\begin{document}
+
+\begin{frame}
+    \maketitle
+\end{frame}
+
+\begin{frame}
+    \tableofcontents
+\end{frame}
+
+\begin{frame}
+    \frametitle{Logistics}
+
+    \begin{itemize}
+        \item unexcused absences in first 3 weeks \(\to\) \textbf{auto-dropped \& NP}
+        \item excused absences: email \href{mailto:bryanngo@berkeley.edu}{bryanngo@berkeley.edu} \& cc \href{mailto:mentors@berkeley.edu}{mentors@berkeley.edu} with subject line \texttt{[Request for Absence] <course>}
+        \item Slides available at \url{https://github.com/bdngo/16b-csm}
+    \end{itemize}
+\end{frame}
+
+\section{Change of Basis}
+
+\begin{frame}
+    \frametitle{Motivation}
+
+    \begin{columns}
+        \column[]{0.5\textwidth}
+        \begin{itemize}
+            \item conversion from one linear coordinate system to another
+            \item \href{https://youtu.be/P2LTAUO1TdA?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab}{3Blue1Brown video}
+        \end{itemize}
+
+        \column[]{0.5\textwidth}
+        \includegraphics[width=0.5\textheight]{800px-3d_two_bases_same_vector.svg.png}
+    \end{columns}
+\end{frame}
+
+\begin{frame}
+    \frametitle{A Visualization}
+
+    \begin{center}
+        \includegraphics[width=0.8\textwidth]{change-of-basis.png}
+    \end{center}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Diagonalization}
+
+    \begin{itemize}
+        \item want the eigenvectors to be the basis for a vector space
+        \item makes math \emph{way} easier
+    \end{itemize} \pause
+    \begin{align}
+        \bm{V} &=
+        \begin{bmatrix}
+            \bm{v}_1 & \bm{v}_2 & \cdots & \bm{v}_n \\
+        \end{bmatrix} \\
+        \bm{AV} &=
+        \begin{bmatrix}
+            \lambda_1 \bm{v}_1 & \lambda_2 \bm{v}_2 & \cdots & \lambda_n \bm{v}_n \\
+        \end{bmatrix} \\
+        &=
+        \begin{bmatrix}
+            \bm{v}_1 & \bm{v}_2 & \cdots & \bm{v}_n \\
+        \end{bmatrix}
+        \begin{bmatrix}
+            \lambda_1 & 0 & \cdots & 0 \\
+            0 & \lambda_2 & \cdots & 0 \\
+            \vdots & \vdots & \ddots & \vdots \\
+            0 & 0 & \cdots & \lambda_n
+        \end{bmatrix} \\
+        &= \bm{V \Lambda} \implies \bm{\Lambda} = \bm{V}^{-1} \bm{AV}
+    \end{align}
+\end{frame}
+
+
+\section{Vector Differential Equations}
+
+\begin{frame}
+    \frametitle{General Form}
+
+    \begin{equation}
+        \diff{t} \bm{x}(t) = \bm{Ax}(t) + \bm{Bu}(t)
+    \end{equation}
+    \begin{itemize}
+        \item if \(\bm{A}\) is diagonal, simply a bunch of exponential differential Equations
+        \item if not, we can try to diagonalize
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Diagonalizing DEs}
+
+    \begin{align}
+        \diff{t} \bm{x}(t) &= \bm{Ax}(t) + \bm{Bu}(t) \\
+        \diff{t} \bm{Vz}(t) &= \bm{AVz}(t) + \bm{Bu}(t) \\
+        \Rightarrow \diff{t} \bm{z}(t) &= \bm{V}^{-1} \bm{AVz}(t) + \bm{V}^{-1} \bm{Bu}(t) \\
+        &= \bm{\Lambda z}(t) + \bm{V}^{-1} \bm{Bu}(t)
+    \end{align}
+\end{frame}
+
+% \section{Inductors (Preview)}
+
+% \begin{frame}
+%     \frametitle{Basic Properties}
+
+%     \begin{center}
+%         \begin{circuitikz}\draw
+%             (0, 2) to[L=\(L\), v=\(V_L\), i>^=\(I_L\)] (0, 0)
+%         ;\end{circuitikz}
+%     \end{center}
+%     \begin{equation}
+%         V_L = L \diff{t} I_L
+%     \end{equation}
+%     \begin{itemize}
+%         \item like a capacitor but for magnetic fields
+%         \item resists instantaneous change in current \pause
+%         \item what happens when \(\omega = 0\)? \(\omega = \infty\)?
+%     \end{itemize}
+% \end{frame}
+
+\end{document}
