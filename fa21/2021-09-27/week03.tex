@@ -1,0 +1,193 @@
+\documentclass[aspectratio=169]{beamer}
+\usepackage{amsmath, amssymb, amsfonts, amsthm}
+\usepackage{cancel}
+\usepackage[output-complex-root=j]{siunitx}
+\usepackage[american, nooldvoltagedirection]{circuitikz}
+\usepackage{bm}
+\usepackage{listings}
+\usepackage{graphicx}
+\usepackage{hyperref}
+
+\usetheme{Berkeley}
+\usefonttheme[onlymath]{serif}
+\AtBeginSection[]{
+    \begin{frame}
+    \vfill
+    \centering
+    \begin{beamercolorbox}[sep=8pt,center,shadow=false,rounded=false]{title}
+        \usebeamerfont{title}\insertsectionhead\par
+    \end{beamercolorbox}
+    \vfill
+    \end{frame}
+}
+
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+
+\title{EECS 16B CSM}
+\author{Bryan Ngo}
+\date{2021-09-27}
+\institute{Computer Science Mentors}
+
+\begin{document}
+
+\begin{frame}
+    \maketitle
+\end{frame}
+
+\begin{frame}
+    \frametitle{Logistics}
+
+    \begin{itemize}
+        \item keep up the attendance!
+        \item public Piazza: \url{https://piazza.com/berkeley/fall2021/csm16b}
+        \item VDEs or Phasors?
+    \end{itemize}
+    \includegraphics[height=0.7\textheight]{piazza-qr.png}
+\end{frame}
+
+\begin{frame}
+    \tableofcontents
+\end{frame}
+
+\section{Complex Numbers}
+
+\begin{frame}
+    \frametitle{Definition}
+
+    \begin{equation}
+        z = \underbrace{a + bj}_{\text{rectangular}} = \underbrace{r e^{j \theta}}_{\text{polar}}
+    \end{equation}
+    \begin{itemize}
+        \item \(a, b, r, \theta \in \R\)
+        \item \(j^2 = -1\)
+        \item we use \(j\) in EE
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Coordinate Transforms}
+
+    \begin{align}
+        r^2 &= a^2 + b^2 \\
+        \tan(\theta) &= \frac{b}{a} \\
+        a &= \Re\{z\} = r \cos(\theta) \\
+        b &= \Im\{z\} = r \sin(\theta)
+    \end{align}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Euler's Formula}
+
+    \begin{equation}
+        e^{j \theta} = \cos(\theta) + j \sin(\theta)
+    \end{equation}
+    \begin{itemize}
+        \item \href{https://youtu.be/v0YEaeIClKY}{relevant 3Blue1Brown}
+        \item \(e^{j \pi} + 1 = 0\) is a special case
+    \end{itemize}
+\end{frame}
+
+\section{Phasors}
+
+\begin{frame}{Phasors}
+    \begin{itemize}
+        \item Encodes information about any sinusoid: voltage, current, etc.
+        \item If frequency is constant, then uniquely identifies
+    \end{itemize}
+    \begin{align}
+        % A \cos(\omega t + \phi) = \Re\{A e^{j (\omega t + \phi)}\} = \Re\{\underbrace{A e^{j \phi}}_{\text{phasor}} e^{j \omega t}\}
+        x(t) = A \cos(\omega t + \phi) &= \frac{A}{2} \left(e^{j (\omega t + \phi)} + e^{-j (\omega t + \phi)}\right) \\
+        &= \frac{A}{2} \left(e^{j \omega t} e^{j \phi} + \overline{e^{j \omega t} e^{j \phi}}\right) \\
+        \iff \widetilde{X} &= \frac{A}{2} e^{j \phi}
+    \end{align}
+\end{frame}
+
+\begin{frame}{Properties}
+    Given \(x_1(t) = \widetilde{X}_1 e^{j \omega t} + \overline{\widetilde{X}_1 e^{j \omega t}}, x_2(t) = \widetilde{X}_2 e^{j \omega t} + \overline{\widetilde{X}_2 e^{j \omega t}}\) with phasors \(\widetilde{X}_{1, 2}\),
+    \begin{itemize}
+        \item Uniqueness: \(x_1(t) = x_2(t) \implies \widetilde{X}_1 = \widetilde{X}_2\)
+        \item Linearity: \(a_1 x_1(t) + a_2 x_2(t) \implies a_1 \widetilde{X}_1 + a_2 \widetilde{X}_2\) for \(a_{1, 2} \in \mathbb{R}\)
+        \item Differentiation: \(x(t) \iff \widetilde{X} \implies \frac{d}{dt} x(t) = \frac{d}{dt} \left(\widetilde{X} e^{j \omega t} + \overline{\widetilde{X} e^{j \omega t}}\right) = j \omega \left(\widetilde{X} e^{j \omega t} + \overline{\widetilde{X} e^{j \omega t}}\right) \iff j \omega \widetilde{X}\)
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Circuits \& Phasors}{KVL}
+    \begin{center}
+        \begin{circuitikz}\draw
+            (0, 0) to[generic, v^=~] (0, 2) to[generic, v^=~] (2, 2) to[generic, v^=~] (2, 0) to[generic, v^=~] (0, 0);
+            \draw[thin, <-, ] (1,1) ++(-60:0.5) arc (-60:170:0.5);
+        \end{circuitikz}
+    \end{center}
+    \begin{equation}
+        \sum_i \widetilde{V}_i = 0
+    \end{equation}
+\end{frame}
+
+\begin{frame}{Circuits \& Phasors (cont.)}{KCL}
+    \begin{center}
+        \begin{circuitikz}\draw
+            (-2, 2) to[generic, i=~] (0, 2) to[generic, i>^=~] (2, 2)
+            (0, 0) to[generic, i=~] (0, 2)
+        ;\end{circuitikz}
+    \end{center}
+    \begin{equation}
+        \sum \widetilde{I}_{out} = \sum \widetilde{I}_{in}
+    \end{equation}
+\end{frame}
+
+\begin{frame}{Circuits \& Phasors (cont.)}{Ohm's Law}
+    \begin{center}
+        \begin{circuitikz}\draw
+            (0, 0) to[generic=\(Z\), v=\(V\), i>^=\(I\)] (4, 0)
+        ;\end{circuitikz}
+    \end{center}
+    \begin{equation}
+        \widetilde{V} = \widetilde{I} \underbrace{Z}_{\text{impedance}}
+    \end{equation}
+\end{frame}
+
+\begin{frame}{Passive Elements \& Phasors}
+    \scalebox{0.75}{
+        \begin{circuitikz}\draw
+            (0, 2) to[R=\(R\), v=\(V\), i>^=\(I\)] (0, 0)
+        ;\end{circuitikz}
+    }
+    \begin{equation}
+        \widetilde{V} = \widetilde{I} R
+    \end{equation}
+    \scalebox{0.75}{
+        \begin{circuitikz}[scale=0.8]\draw
+            (0, 2) to[L=\(L\), v=\(V\), i>^=\(I\)] (0, 0)
+        ;\end{circuitikz}
+    }
+    \begin{equation}
+        \widetilde{V} = L \frac{d}{dt} \widetilde{I} = j \omega L \widetilde{I}
+    \end{equation}
+    \scalebox{0.75}{
+        \begin{circuitikz}[scale=0.8]\draw
+            (0, 2) to[C=\(C\), v=\(V\), i>^=\(I\)] (0, 0)
+        ;\end{circuitikz}
+    }
+    \begin{equation}
+        \widetilde{I} = C \frac{d}{dt} \widetilde{V} = j \omega C \widetilde{V} \implies \widetilde{V} = \frac{1}{j \omega C} \widetilde{I}
+    \end{equation}
+\end{frame}
+
+\begin{frame}{Demo}
+    \Huge\url{http://tinyurl.com/y5qfnqtk}
+    \includegraphics[height=0.7\textheight]{lowpass-qr.png}
+\end{frame}
+
+\begin{frame}{Low Pass Filter}
+    \begin{align}
+        \widetilde{V}_{out} &= \frac{\frac{1}{j \omega C}}{R + \frac{1}{j \omega C}} \widetilde{V}_{in} \\
+        \widetilde{V}_{out} &= \frac{1}{1 + j \omega RC} \widetilde{V}_{in} \\
+        \Rightarrow H(j \omega) &= \frac{\widetilde{V}_{out}}{\widetilde{V}_{in}} = \frac{1}{1 + j \omega RC}
+    \end{align}
+\end{frame}
+
+\end{document}
