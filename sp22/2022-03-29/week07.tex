@@ -1,0 +1,98 @@
+\documentclass[aspectratio=169]{beamer}
+\usepackage{amsmath, amssymb, amsfonts, amsthm}
+\usepackage{cancel}
+\usepackage[output-complex-root=j]{siunitx}
+\usepackage[american, nooldvoltagedirection]{circuitikz}
+\usepackage{bm}
+\usepackage{lmodern}
+\usepackage{listings}
+\usepackage{graphicx}
+\usepackage{hyperref}
+
+\usetheme{Berkeley}
+\usefonttheme[onlymath]{serif}
+\AtBeginSection[]{
+    \begin{frame}
+    \vfill
+    \centering
+    \begin{beamercolorbox}[sep=8pt,center,shadow=false,rounded=false]{title}
+    \usebeamerfont{title}\insertsectionhead\par
+    \end{beamercolorbox}
+    \vfill
+    \end{frame}
+}
+
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\tpose}[1]{\left[#1\right]^{\! \top} \!\!}
+
+\title{EECS 16B CSM}
+\author{Bryan Ngo}
+\date{2022-03-29}
+\institute{UC Berkeley}
+
+\begin{document}
+
+\begin{frame}
+    \maketitle
+\end{frame}
+
+\begin{frame}
+    \frametitle{Logistics}
+
+    \begin{itemize}
+        \item Spring break???
+        \item CSM feedback form results
+    \end{itemize}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Controllability}
+
+    \begin{align}
+        \bm{x}[t + 1] &= \bm{Ax}[t] + \bm{Bu}[t] \\
+        \bm{x}[1] &= \bm{Ax}[0] + \bm{Bu}[0] \\
+        \bm{x}[2] &= \bm{A}^2 \bm{x}[0] + \bm{ABu}[0] + \bm{Bu}[1] \\
+        \bm{x}[t] &= \bm{A}^t \bm{x}[0] + \sum_{i = 0}^{t - 1} \bm{A}^{t - i} \bm{Bu}[i] \\
+        \bm{x}[t] - \bm{A}^t \bm{x}[0] &=
+        \begin{bmatrix}
+            \bm{B} & \bm{AB} & \cdots & \bm{A}^{t - 1} \bm{B}
+        \end{bmatrix}
+        \begin{bmatrix}
+            \bm{u}[t - 1] \\
+            \bm{u}[t - 2] \\ 
+            \vdots \\
+            \bm{u}[0]
+        \end{bmatrix} \\
+        \Rightarrow \operatorname{span}\left\{
+        \begin{bmatrix}
+            \bm{B} & \bm{AB} & \cdots & \bm{A}^{t - 1} \bm{B}
+        \end{bmatrix}\right\} &= \R^n
+    \end{align}
+\end{frame}
+
+\begin{frame}
+    \frametitle{Gram-Schmidt}
+
+    \begin{align}
+        \bm{p}_i &= \bm{v}_i - \sum_{j \neq i} (\tpose{\bm{v}_i} \bm{w}_j) \bm{w}_j \\
+        \bm{w}_i &= \frac{\bm{p}_i}{\|\bm{p}_i\|}
+    \end{align}
+
+    \begin{itemize}
+        \item Turn basis vector set \(V\) into orthonormal basis \(W\)
+        \item Steps
+        \begin{enumerate}
+            \item Subtract all \(\operatorname{proj}_{\bm{v}_i}(\bm{v}_n)\) for \(i \neq n\)
+            \item Normalize result
+            \item repeat for all vectors
+        \end{enumerate}
+        \item systematically removing the parallel component of every other vector
+        \item \href{https://upload.wikimedia.org/wikipedia/commons/e/ee/Gram-Schmidt_orthonormalization_process.gif}{cool GIF of GS}
+    \end{itemize}
+\end{frame}
+
+\end{document}
